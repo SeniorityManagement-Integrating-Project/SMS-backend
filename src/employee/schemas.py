@@ -6,7 +6,7 @@ from sqlmodel import SQLModel
 class EmployeeCreate(SQLModel):
     name: str
     email: str
-    biography: str
+    biography: Optional[str]
     role_id: int
 
 
