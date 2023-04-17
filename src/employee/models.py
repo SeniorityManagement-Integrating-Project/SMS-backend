@@ -11,12 +11,6 @@ if TYPE_CHECKING:
     from src.skill_validation_request.models import SkillValidationRequest
 
 
-class Interaction(SQLModel, table=True):
-    employee_from_id: int = Field(foreign_key="employee.id", primary_key=True)
-    employee_to_id: int = Field(foreign_key="employee.id", primary_key=True)
-    date: datetime = Field(default_factory=datetime.now)
-
-
 class EmployeeSkill(SQLModel, table=True):
     __tablename__ = "employee_skill"  # type: ignore
     employee_id: int = Field(foreign_key="employee.id", primary_key=True)
