@@ -3,6 +3,7 @@ from sqlmodel import Session, select
 
 from src.db import engine
 # from src.role.exceptions import RoleNotFound, RoleAlreadyExists
+from src.seniority_level.exceptions import SeniorityLevelNotFound
 from src.seniority_level.models import SeniorityLevel
 # from src.role.schemas import RoleCreate, RoleSeniorityLevels, RoleUpdate, RoleEmployees
 # from src.role.mappers import to_role, to_role_seniority_levels, update_role, to_role_employees

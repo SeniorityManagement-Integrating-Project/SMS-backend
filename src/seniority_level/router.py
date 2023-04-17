@@ -2,6 +2,7 @@ from typing import List
 
 from fastapi import APIRouter, status, HTTPException
 # from src.role.exceptions import RoleAlreadyExists, RoleNotFound
+from src.seniority_level.exceptions import SeniorityLevelNotFound
 
 import src.seniority_level.service as seniority_level_service
 from src.seniority_level.models import SeniorityLevel
