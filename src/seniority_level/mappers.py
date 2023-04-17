@@ -1,11 +1,13 @@
-from src.role.models import Role
-from src.role.schemas import RoleCreate, RoleEmployees, RoleUpdate, RoleSeniorityLevels
+from src.seniority_level.models import SeniorityLevel
+from src.seniority_level.schemas import SeniorityLevelCreate
 
 
-def to_role(role: RoleCreate | RoleUpdate) -> Role:
-    return Role(**role.dict())
+# def to_seniority_level(seniority_level: SeniorityLevelCreate | RoleUpdate) -> Role:
+def to_seniority_level(seniority_level: SeniorityLevelCreate) -> SeniorityLevel:
+    return SeniorityLevel(**seniority_level.dict())
 
 
+"""
 def update_role(role_db: Role, role: RoleUpdate) -> Role:
     role_data = role.dict(exclude_unset=True)
     for key, value in role_data.items():
@@ -28,3 +30,4 @@ def to_role_seniority_levels(role: Role) -> RoleSeniorityLevels:
 
 def to_role_seniority_levels_list(roles: list[Role]) -> list[RoleSeniorityLevels]:
     return [to_role_seniority_levels(role) for role in roles]
+"""
