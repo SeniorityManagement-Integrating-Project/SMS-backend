@@ -5,9 +5,9 @@ from src.db import engine
 from src.seniority_level.exceptions import SeniorityLevelAlreadyExist, SeniorityLevelNotFound
 from src.seniority_level.models import SeniorityLevel
 # from src.role.schemas import RoleCreate, RoleSeniorityLevels, RoleUpdate, RoleEmployees
-from src.seniority_level.schemas import SeniorityLevelCreate
+from src.seniority_level.schemas import SeniorityLevelCreate, SeniorityLevelUpdate
 # from src.role.mappers import to_role, to_role_seniority_levels, update_role, to_role_employees
-from src.seniority_level.mappers import to_seniority_level
+from src.seniority_level.mappers import to_seniority_level, update_seniority_level
 
 
 def get_all() -> list[SeniorityLevel]:
@@ -41,6 +41,17 @@ def create(seniority_level: SeniorityLevelCreate) -> SeniorityLevel:
         return seniority_level_db
 
 
+def update(seniority_level_id: int, seniority_level: SeniorityLevelUpdate) -> SeniorityLevel:
+    with Session(engine) as session:
+        seniority_level_db = session.get(SeniorityLevel, seniority_level_id)
+        if not seniority_level_db:
+            raise SeniorityLevelNotFound(seniority_level_id)
+        update_seniority_level(seniority_level_db, seniority_level)
+        session.commit()
+        session.refresh(seniority_level_db)
+        return seniority_level_db
+
+
 """
 def get_with_employees(role_id: int) -> RoleEmployees:
     with Session(engine) as session:
@@ -61,19 +72,6 @@ def get_with_seniority_levels(role_id: int) -> RoleSeniorityLevels:
         except NoResultFound as exception:
             raise RoleNotFound(role_id) from exception
 
-
-
-
-
-def update(role_id: int, role: RoleUpdate) -> Role:
-    with Session(engine) as session:
-        role_db = session.get(Role, role_id)
-        if not role_db:
-            raise RoleNotFound(role_id)
-        update_role(role_db, role)
-        session.commit()
-        session.refresh(role_db)
-        return role_db
 
 
 def delete(role_id: int) -> Role:

@@ -6,7 +6,7 @@ from src.seniority_level.exceptions import SeniorityLevelAlreadyExist, Seniority
 import src.seniority_level.service as seniority_level_service
 from src.seniority_level.models import SeniorityLevel
 # from src.role.schemas import RoleCreate, RoleEmployees, RoleSeniorityLevels, RoleUpdate
-from src.seniority_level.schemas import SeniorityLevelCreate
+from src.seniority_level.schemas import SeniorityLevelCreate, SeniorityLevelUpdate
 
 router = APIRouter()
 
@@ -30,20 +30,18 @@ def get(seniority_level_id: int) -> SeniorityLevel:
 def create(seniority_level: SeniorityLevelCreate) -> SeniorityLevel:
 
     return seniority_level_service.create(seniority_level)
-    # except SeniorityLevelAlreadyExist as exc:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
+
+
+@router.patch("/{seniority_level_id}", status_code=status.HTTP_200_OK, response_model=SeniorityLevel)
+def update(seniority_level_id: int, seniority_level: SeniorityLevelUpdate):
+    try:
+        return seniority_level_service.update(seniority_level_id, seniority_level)
+    except SeniorityLevelNotFound as exc:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
 
 
 """
-@router.patch("/{role_id}", status_code=status.HTTP_200_OK, response_model=Role)
-def update(role_id: int, role: RoleUpdate):
-    try:
-        return role_service.update(role_id, role)
-    except RoleNotFound as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-
-
 @router.delete("/{role_id}", status_code=status.HTTP_200_OK)
 def delete(role_id: int) -> Role:
     try:

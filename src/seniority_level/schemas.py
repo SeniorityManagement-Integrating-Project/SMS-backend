@@ -11,9 +11,10 @@ class SeniorityLevelCreate(SQLModel):
     role_id: int
 
 
-class RoleUpdate(SQLModel):
+class SeniorityLevelUpdate(SQLModel):
     name: Optional[str]
     description: Optional[str]
+    role_id: Optional[int]
 
 
 class RoleEmployees(SQLModel):
