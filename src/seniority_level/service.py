@@ -52,6 +52,16 @@ def update(seniority_level_id: int, seniority_level: SeniorityLevelUpdate) -> Se
         return seniority_level_db
 
 
+def delete(seniority_level_id: int) -> SeniorityLevel:
+    with Session(engine) as session:
+        seniority_level = session.get(SeniorityLevel, seniority_level_id)
+        if not seniority_level:
+            raise SeniorityLevelNotFound(seniority_level_id)
+        session.delete(seniority_level)
+        session.commit()
+        return seniority_level
+
+
 """
 def get_with_employees(role_id: int) -> RoleEmployees:
     with Session(engine) as session:
@@ -72,14 +82,4 @@ def get_with_seniority_levels(role_id: int) -> RoleSeniorityLevels:
         except NoResultFound as exception:
             raise RoleNotFound(role_id) from exception
 
-
-
-def delete(role_id: int) -> Role:
-    with Session(engine) as session:
-        role = session.get(Role, role_id)
-        if not role:
-            raise RoleNotFound(role_id)
-        session.delete(role)
-        session.commit()
-        return role
 """

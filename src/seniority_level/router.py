@@ -41,13 +41,16 @@ def update(seniority_level_id: int, seniority_level: SeniorityLevelUpdate):
             status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
 
 
-"""
-@router.delete("/{role_id}", status_code=status.HTTP_200_OK)
-def delete(role_id: int) -> Role:
+@router.delete("/{seniority_level_id}", status_code=status.HTTP_200_OK)
+def delete(seniority_level_id: int) -> SeniorityLevel:
     try:
-        return role_service.delete(role_id)
-    except RoleNotFound as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+        return seniority_level_service.delete(seniority_level_id)
+    except SeniorityLevelNotFound as exc:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+
+
+"""
 
 
 @router.get("/employees/{role_id}")
