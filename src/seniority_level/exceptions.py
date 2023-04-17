@@ -1,7 +1,7 @@
-class RoleNotFound(Exception):
-    def __init__(self, role_id):
-        self.role_id = role_id
-        self.message = f"Role with id {role_id} does not exists"
+class SeniorityLevel(Exception):
+    def __init__(self, seniority_level_id):
+        self.seniority_level_id = seniority_level_id
+        self.message = f"Seniority Level with id {seniority_level_id} does not exist"
         super().__init__(self.message)
 
 class RoleAlreadyExists(Exception):

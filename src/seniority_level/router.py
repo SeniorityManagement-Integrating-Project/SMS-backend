@@ -15,18 +15,17 @@ def get_all() -> List[SeniorityLevel]:
     return seniority_level_service.get_all()
 
 
-"""
-@router.get("/{role_id}")
-def get(role_id: int) -> Role:
+@router.get("/{seniority_level_id}")
+def get(seniority_level_id: int) -> SeniorityLevel:
     try:
-        role = role_service.get(role_id)
-        return role
-    except RoleNotFound as exc:
+        seniority_level = seniority_level_service.get(seniority_level_id)
+        return seniority_level
+    except SeniorityLevelNotFound as exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
 
 
-
+"""
 @router.post("/")
 def create(role: RoleCreate) -> Role:
     try:

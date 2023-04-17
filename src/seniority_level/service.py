@@ -15,17 +15,18 @@ def get_all() -> list[SeniorityLevel]:
         return result.all()
 
 
-"""
-def get(role_id: int) -> Role:
+def get(seniority_level_id: int) -> SeniorityLevel:
     with Session(engine) as session:
-        statement = select(Role).where(Role.id == role_id)
+        statement = select(SeniorityLevel).where(
+            SeniorityLevel.id == seniority_level_id)
         result = session.exec(statement)
         try:
             return result.one()
         except NoResultFound as exception:
-            raise RoleNotFound(role_id) from exception
+            raise SeniorityLevelNotFound(seniority_level_id) from exception
 
 
+"""
 def get_with_employees(role_id: int) -> RoleEmployees:
     with Session(engine) as session:
         statement = select(Role).where(Role.id == role_id)
