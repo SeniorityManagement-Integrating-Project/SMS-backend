@@ -9,8 +9,7 @@ on:
 
 jobs:
 
-  create_env_file:
-
+  build-and-push-image:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,11 +17,6 @@ jobs:
     - name: Make envfile
       run: echo "DATABASE_URL=${{ secrets.POSTGRES_RDS_URL }}" > .env
 
-  build-and-push-image:
-
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag krizz23/sms-backend:actions
 
