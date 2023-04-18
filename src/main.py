@@ -25,7 +25,7 @@ app.include_router(employee.router, prefix="/employee", tags=["Employee"])
 app.include_router(role.router, prefix="/role", tags=["Role"])
 app.include_router(interaction.router, prefix="/interaction", tags=["Interaction"])
 app.include_router(seniority_level.router,
-                   prefix="/seniority_level", tags=["seniority_level"])
+                   prefix="/seniority_level", tags=["Seniority Level"])
 app.include_router(skill.router, prefix="/skill", tags=["Skill"])
 app.include_router(request.router, prefix="/request", tags=["Request"])
 
