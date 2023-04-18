@@ -1,0 +1,36 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+    types: ["closed"]
+
+jobs:
+
+  create_env_file:
+  
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Make envfile
+    - uses: SpicyPizza/create-envfile@v1.3
+      with:
+        envkey_DEBUG: false
+        envkey_DATABASE_URL: ${{ secrets.POSTGRES_RDS_URL }}
+        file_name: .env
+        
+  build-and-push-image:
+    
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag krizz23/sms-backend:actions
+      
+    - name: Docker Login
+      run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
+      
+    - name: Docker Push
+      run: docker push krizz23/sms-backend:actions
