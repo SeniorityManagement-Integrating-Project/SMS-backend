@@ -25,3 +25,15 @@ jobs:
 
     - name: Docker Push
       run: docker push krizz23/sms-backend:actions
+
+    - name: Run sshpass commands
+      uses: matheusvanzan/sshpass-action@v1
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        user: ${{ secrets.EC2_USER }}
+        pass: ${{ secrets.EC2_PRIVATE_KEY }}
+        run: |
+          sudo docker ps -q --filter "name=sms-backend" | xargs -r sudo docker stop'
+          sleep 2
+          sudo docker ps -aq --filter "name=sms-backend" | xargs -r sudo docker rm -fv
+          sleep 5
