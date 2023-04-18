@@ -18,3 +18,10 @@ async def skill_not_found_exception_handler(_: Request, exc: SkillNotFound):
 
 def add_skill_exception_handlers(app: FastAPI):
     app.add_exception_handler(SkillNotFound, skill_not_found_exception_handler)
+
+
+class SkillAlreadyExists(Exception):
+    def __init__(self, skill_name):
+        self.skill_name = skill_name
+        self.message = f"Skill with name \'{skill_name}\' already exists"
+        super().__init__(self.message)
