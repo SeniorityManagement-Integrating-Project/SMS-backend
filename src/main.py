@@ -2,8 +2,18 @@ from fastapi import FastAPI
 
 from src.employee import router as employee
 from src.role import router as role
+from src.skill import router as skill
+from src.skill_validation_request import router as request
 
 app = FastAPI()
 
+
+@app.get("/")
+def read_root():
+    return {"Welcome": "Welcome to Seniority Management System REST API"}
+
+
 app.include_router(employee.router, prefix="/employee", tags=["employee"])
 app.include_router(role.router, prefix="/role", tags=["role"])
+app.include_router(skill.router, prefix="/skill", tags=["skill"])
+app.include_router(request.router, prefix="/request", tags=["request"])
