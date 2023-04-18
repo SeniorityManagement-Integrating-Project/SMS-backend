@@ -19,7 +19,7 @@ jobs:
       with:
         envkey_DEBUG: false
         envkey_DATABASE_URL: ${{ secrets.POSTGRES_RDS_URL }}
-        file_name: .env
+        file_name: ../../.env
         
   build-and-push-image:
     
