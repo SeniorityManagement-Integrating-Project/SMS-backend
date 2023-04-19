@@ -3,10 +3,23 @@ from sqlmodel import Session, select
 
 from src.db import engine
 from src.skill.exceptions import SkillNotFound, SkillAlreadyExists
-from src.skill.mappers import to_skill, update_skill, to_skill_employees, to_skill_seniority_levels, to_skill_requests, \
-    to_skill_all
+from src.skill.mappers import (
+    to_skill,
+    update_skill,
+    to_skill_employees,
+    to_skill_seniority_levels,
+    to_skill_requests,
+    to_skill_all,
+)
 from src.skill.models import Skill
-from src.skill.schemas import SkillCreate, SkillUpdate, SkillEmployees, SkillSeniorityLevels, SkillRequests, SkillAll
+from src.skill.schemas import (
+    SkillCreate,
+    SkillUpdate,
+    SkillEmployees,
+    SkillSeniorityLevels,
+    SkillRequests,
+    SkillAll,
+)
 
 
 def get_all() -> list[Skill]:
@@ -41,6 +54,11 @@ def create(skill: SkillCreate) -> Skill:
 
 def update(skill_id: int, skill: SkillUpdate) -> Skill:
     with Session(engine) as session:
+        if skill.name:
+            statement = select(Skill).where(Skill.name == skill.name)
+            result = session.exec(statement)
+            if result.one_or_none():
+                raise SkillAlreadyExists(skill.name)
         skill_db = session.get(Skill, skill_id)
         if not skill_db:
             raise SkillNotFound(skill_id)

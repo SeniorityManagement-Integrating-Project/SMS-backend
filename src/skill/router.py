@@ -38,7 +38,8 @@ def update(skill_id: int, skill: SkillUpdate):
         return skill_service.update(skill_id, skill)
     except SkillNotFound as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-
+    except SkillAlreadyExists as exc:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
 
 @router.delete("/{skill_id}", status_code=status.HTTP_200_OK)
 def delete(skill_id: int) -> Skill:
