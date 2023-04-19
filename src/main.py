@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from src.employee import router as employee
 from src.role import router as role
 from src.interaction import router as interaction
+from src.seniority_level.exceptions import add_seniority_level_exception_handlers
 from src.skill import router as skill
 from src.skill_validation_request import router as request
 from src.seniority_level import router as seniority_level
@@ -35,3 +36,4 @@ add_skill_exception_handlers(app)
 add_request_exception_handlers(app)
 add_employee_exception_handlers(app)
 add_interaction_exception_handlers(app)
+add_seniority_level_exception_handlers(app)
