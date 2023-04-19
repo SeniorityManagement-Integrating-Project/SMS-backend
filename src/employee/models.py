@@ -25,6 +25,9 @@ class Employee(SQLModel, table=True):
     biography: Optional[str]
     role_id: Optional[int] = Field(default=None, foreign_key="role.id")
     role: Optional["Role"] = Relationship(back_populates="employees")
-    account: "Account" = Relationship(back_populates="employee")
+    account: List["Account"] = Relationship(
+        back_populates="employee",
+        sa_relationship_kwargs={"uselist": False},
+    )
     skills: List["Skill"] = Relationship(link_model=EmployeeSkill)
     requests: List["SkillValidationRequest"] = Relationship(back_populates="employee")

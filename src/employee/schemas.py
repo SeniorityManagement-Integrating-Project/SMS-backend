@@ -33,7 +33,7 @@ class EmployeeRequests(EmployeeBase):
 
 
 class EmployeeAccount(EmployeeBase):
-    account: Account
+    account: Optional[Account]
 
 
 class EmployeeRole(EmployeeBase):
