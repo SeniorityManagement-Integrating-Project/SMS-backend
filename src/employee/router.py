@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, Query
 
 import src.employee.service as employee_service
 from src.employee.models import Employee
@@ -29,8 +29,8 @@ def get_by_role_id(role_id: int):
     return employee_service.get_by_role_id(role_id)
 
 
-@router.get("/name/{name}", response_model=List[Employee], status_code=status.HTTP_200_OK)
-def search_by_name(name: str):
+@router.get("", response_model=List[Employee], status_code=status.HTTP_200_OK)
+def search_by_name(name: str = Query(min_length=3)):
     return employee_service.search_by_name(name)
 
 
@@ -49,7 +49,7 @@ def delete(employee_id: int):
     return employee_service.delete(employee_id)
 
 
-@router.post("/skills/{employee_id}", tags=["Employee Skills"])
+@router.post("/skills/{employee_id}/{skill_id}", tags=["Employee Skills"])
 def add_skill(employee_id: int, skill_id: int):
     return employee_service.add_skill(employee_id, skill_id)
 
