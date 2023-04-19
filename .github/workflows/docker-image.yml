@@ -42,7 +42,7 @@ jobs:
         ssh -o StrictHostKeyChecking=no -i private_key $EC2_USER@$EC2_HOST '
           #Now we have got the access of EC2 and we will start the deploy .
           #Stop the running container
-          sudo docker ps -q --filter "name=sms-backend" | xargs -r sudo docker stop'
+          sudo docker ps -q --filter "name=sms-backend" | xargs -r sudo docker stop
           sleep 2
           #Remove the container
           sudo docker ps -aq --filter "name=sms-backend" | xargs -r sudo docker rm -fv
