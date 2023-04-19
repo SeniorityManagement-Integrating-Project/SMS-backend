@@ -60,6 +60,11 @@ def create(role: RoleCreate) -> Role:
 
 def update(role_id: int, role: RoleUpdate) -> Role:
     with Session(engine) as session:
+        if role.name:
+            statement = select(Role).where(Role.name == role.name)
+            result = session.exec(statement)
+            if result.one_or_none():
+                raise RoleAlreadyExists(role.name)
         role_db = session.get(Role, role_id)
         if not role_db:
             raise RoleNotFound(role_id)
