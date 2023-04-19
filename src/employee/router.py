@@ -49,7 +49,7 @@ def delete(employee_id: int):
     return employee_service.delete(employee_id)
 
 
-@router.post("/skills/{employee_id}", tags=["Employee Skills"])
+@router.post("/skills/{employee_id}/{skill_id}", tags=["Employee Skills"])
 def add_skill(employee_id: int, skill_id: int):
     return employee_service.add_skill(employee_id, skill_id)
 
