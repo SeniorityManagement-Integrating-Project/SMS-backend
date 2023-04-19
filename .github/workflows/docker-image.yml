@@ -47,5 +47,9 @@ jobs:
           #Remove the container
           sudo docker ps -aq --filter "name=sms-backend" | xargs -r sudo docker rm -fv
           sleep 5
-          #Pull and run the latest image    
+          # Remove unused data
+          sudo docker system prune -fa --volumes
+          #Pull and run the latest image
+          sudo docker pull krizz23/sms-backend:actions
+          sudo docker run -d -p 9000:8000 --name sms-backend krizz23/sms-backend:actions
         '
