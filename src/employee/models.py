@@ -10,14 +10,6 @@ if TYPE_CHECKING:
     from src.account.models import Account
     from src.skill_validation_request.models import SkillValidationRequest
 
-
-class EmployeeSkill(SQLModel, table=True):
-    __tablename__ = "employee_skill"  # type: ignore
-    employee_id: int = Field(foreign_key="employee.id", primary_key=True)
-    skill_id: int = Field(foreign_key="skill.id", primary_key=True)
-    attainment_date: datetime = Field(default_factory=datetime.now)
-
-
 class Employee(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
@@ -29,5 +21,4 @@ class Employee(SQLModel, table=True):
         back_populates="employee",
         sa_relationship_kwargs={"uselist": False},
     )
-    skills: List["Skill"] = Relationship(link_model=EmployeeSkill)
     requests: List["SkillValidationRequest"] = Relationship(back_populates="employee")

@@ -4,7 +4,7 @@ from typing import List, Optional
 from sqlmodel import SQLModel
 from src.account.models import Account
 from src.role.models import Role
-from src.seniority_level.models import SeniorityLevel
+from src.seniority_level.models import RoleSeniorityLevel
 
 from src.skill.models import Skill
 from src.skill_validation_request.models import SkillValidationRequest
@@ -47,9 +47,14 @@ class EmployeeUpdate(SQLModel):
     role_id: Optional[int]
 
 
-class EmployeeSeniorityLevel(SeniorityLevel):
-    attainment_date: datetime
+class EmployeeSeniorityLevel(SQLModel):
+    role_seniority_level_id: int
+    level: int
+    seniority_level_name: str
     role_name: str
+    description: str
+    attainment_date: datetime
+
 
 
 class EmployeeCurrentSeniorityLevel(EmployeeBase):

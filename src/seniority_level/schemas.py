@@ -2,7 +2,7 @@ from typing import Optional, List
 
 from sqlmodel import SQLModel
 from src.employee.models import Employee
-from src.seniority_level.models import SeniorityLevel
+from src.seniority_level.models import RoleSeniorityLevel
 
 
 class SeniorityLevelCreate(SQLModel):
@@ -28,4 +28,4 @@ class RoleSeniorityLevels(SQLModel):
     id: int
     name: str
     description: str
-    seniority_levels: List[SeniorityLevel]
+    seniority_levels: List[RoleSeniorityLevel]

@@ -30,5 +30,6 @@ class SkillValidationRequest(SQLModel, table=True):
     validator: Optional[int] = Field(foreign_key='account.id')
     approved: bool = False
     validated: bool = False
+    approved_date: datetime = Field(default_factory=datetime.now)
     comments: List["SkillValidationRequestComment"] = Relationship(
         back_populates='request')

@@ -8,7 +8,7 @@ from src.account.models import Account
 from src.employee.models import Employee
 from src.interaction.models import Interaction
 from src.role.models import Role
-from src.seniority_level.models import SeniorityLevelSkill, SeniorityLevel
+from src.seniority_level.models import SeniorityLevel, RoleSeniorityLevel, SeniorityLevelSkill
 from src.skill.models import Skill
 from src.skill_validation_request.models import SkillValidationRequest
 

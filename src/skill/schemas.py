@@ -3,7 +3,7 @@ from typing import Optional, List
 from sqlmodel import SQLModel
 
 from src.employee.models import Employee
-from src.seniority_level.models import SeniorityLevel
+from src.seniority_level.models import RoleSeniorityLevel
 from src.skill_validation_request.models import SkillValidationRequest
 
 
@@ -28,7 +28,7 @@ class SkillSeniorityLevels(SQLModel):
     id: int
     name: str
     description: str
-    seniority_levels: List[SeniorityLevel] = []
+    seniority_levels: List[RoleSeniorityLevel] = []
 
 
 class SkillRequests(SQLModel):
@@ -43,5 +43,5 @@ class SkillAll(SQLModel):
     name: str
     description: str
     employees: List[Employee] = []
-    seniority_levels: List[SeniorityLevel] = []
+    seniority_levels: List[RoleSeniorityLevel] = []
     requests: List[SkillValidationRequest] = []
