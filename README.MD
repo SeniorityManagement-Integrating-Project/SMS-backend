@@ -1,17 +1,19 @@
 # SMS-backend 
 
-Proyecto creado con `Python 3.10.10`
+Project created with `Python 3.10.10`
 
-## Instalación de dependencias
+## Dependency installation
 
 `pip install -r requirements.txt`
 
-**Nota:** Cuando se instale una nueva dependencia se tiene que ejecutar el comando: `pip freeze > requirements.txt`
-para agregarla al archivo de requerimientos.
+**Note:** When a new dependency is installed you have to run the command: `pip freeze > requirements.txt`
+to add it to the requirements file.
 
-**Nota 2:** Es importante aislar el entorno virtual de los paquetes del espacio del usuario global del sistema, para no
-estar inyectándole dependencias innecesarias al proyecto.
+**Nota 2:** It is important to isolate the python virtual environment from the packages of the system’s global user
+space, so as not to be injecting unnecessary dependencies into the project.
 
-## Ejecutando el proyecto
+## Executing the project
 
-Estando en la raíz del proyecto ejecutamos: `uvicorn src.main:app --reload`
+At the root of the project we execute: `uvicorn src.main:app --reload`
+
+**Note:** Dont forget to create the `.env` file with the environment variables.
