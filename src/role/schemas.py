@@ -2,7 +2,7 @@ from typing import Optional, List
 
 from sqlmodel import SQLModel
 from src.employee.models import Employee
-from src.seniority_level.models import RoleSeniorityLevel
+from src.role_seniority_level.models import RoleSeniorityLevel
 
 class RoleCreate(SQLModel):
     name: str

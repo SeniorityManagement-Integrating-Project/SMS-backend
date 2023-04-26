@@ -4,7 +4,6 @@ from typing import List, Optional
 from sqlmodel import SQLModel
 from src.account.models import Account
 from src.role.models import Role
-from src.seniority_level.models import RoleSeniorityLevel
 
 from src.skill.models import Skill
 from src.skill_validation_request.models import SkillValidationRequest

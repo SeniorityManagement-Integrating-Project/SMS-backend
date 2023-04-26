@@ -1,18 +1,19 @@
-from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
+from fastapi import Request, status, FastAPI
 
 
 class SeniorityLevelNotFound(Exception):
-    def __init__(self, seniority_level_id):
+    def __init__(self, seniority_level_id: int):
         self.seniority_level_id = seniority_level_id
-        self.message = f"Seniority Level with id {seniority_level_id} does not exist"
+        self.message = f"Seniority level with id {seniority_level_id} does not exist."
         super().__init__(self.message)
 
 
 class SeniorityLevelAlreadyExist(Exception):
-    def __init__(self, seniority_level_name):
-        self.role_id = seniority_level_name
-        self.message = f"Role with name '{seniority_level_name}' already exists"
+    def __init__(self, property_value=None, property_name="id"):
+        self.property_name = property_name
+        self.property_name = property_value
+        self.message = f"Seniority level with {property_name} {property_value} already exist."
         super().__init__(self.message)
 
 
@@ -23,7 +24,7 @@ async def seniority_level_not_found_exception_handler(_: Request, exc: Seniority
     )
 
 
-async def seniority_level_already_exists_exception_handler(
+async def seniority_level_already_exist_exception_handler(
     _: Request, exc: SeniorityLevelAlreadyExist
 ):
     return JSONResponse(
@@ -35,5 +36,5 @@ async def seniority_level_already_exists_exception_handler(
 def add_seniority_level_exception_handlers(app: FastAPI):
     app.add_exception_handler(SeniorityLevelNotFound, seniority_level_not_found_exception_handler)
     app.add_exception_handler(
-        SeniorityLevelAlreadyExist, seniority_level_already_exists_exception_handler
+        SeniorityLevelAlreadyExist, seniority_level_already_exist_exception_handler
     )

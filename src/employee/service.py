@@ -92,6 +92,7 @@ def update(employee_id: int, employee: EmployeeUpdate) -> Employee:
         employee_db = session.get(Employee, employee_id)
         if not employee_db:
             raise EmployeeNotFound(employee_id)
+        employee_db.before_update()
         update_employee(employee_db, employee)
         try:
             session.commit()

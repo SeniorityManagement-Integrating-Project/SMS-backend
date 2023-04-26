@@ -1,9 +1,20 @@
-from typing import Optional, List
+from typing import List, Optional
 from datetime import datetime
 
 from sqlmodel import SQLModel
 
-from src.skill_validation_request.models import SkillValidationRequestComment
+from src.skill_request_comment.models import SkillValidationRequestComment
+
+
+class SkillValidationRequestBase(SQLModel):
+    id: int
+    employee_id: int
+    skill_id: int
+    request_date: Optional[datetime]
+    support_file: Optional[str]
+    validator: Optional[int]
+    approved: bool
+    validated: bool
 
 
 class RequestCreate(SQLModel):
@@ -11,21 +22,9 @@ class RequestCreate(SQLModel):
 
 
 class RequestUpdate(SQLModel):
-    validator: int
+    validator: Optional[int]
     approved: bool
 
 
-class RequestComment(SQLModel):
-    id: int
-    employee_id: int
-    skill_id: int
-    request_date: datetime
-    support_file: str
-    validator: int
-    approved: bool
-    validated: bool
-    comments: List[SkillValidationRequestComment]
-
-
-class RequestCommentCreate(SQLModel):
-    comment: str
+class SkillValidationRequestComments(SkillValidationRequestBase):
+    comments: List["SkillValidationRequestComment"]

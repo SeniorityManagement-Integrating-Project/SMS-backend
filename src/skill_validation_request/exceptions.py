@@ -14,7 +14,7 @@ class RequestAlreadyApproved(Exception):
         self.employee_id = employee_id
         self.skill_id = skill_id
         self.message = (
-            f"Employee with id {employee_id} has the skill with id {skill_id} already approved"
+            f"Employee with id {employee_id} has already approved the skill with id {skill_id}"
         )
         super().__init__(self.message)
 

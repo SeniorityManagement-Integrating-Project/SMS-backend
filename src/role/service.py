@@ -68,6 +68,7 @@ def update(role_id: int, role: RoleUpdate) -> Role:
         role_db = session.get(Role, role_id)
         if not role_db:
             raise RoleNotFound(role_id)
+        role_db.before_update()
         update_role(role_db, role)
         session.commit()
         session.refresh(role_db)

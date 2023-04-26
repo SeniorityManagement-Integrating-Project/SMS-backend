@@ -1,16 +1,16 @@
 from typing import TYPE_CHECKING, List, Optional
 
-from sqlmodel import Field, Relationship, SQLModel
+from sqlmodel import Field, Relationship
+from src.models import BaseModel
 
-from src.seniority_level.models import SeniorityLevelSkill
+from src.role_seniority_level.models import SeniorityLevelSkill
 
 if TYPE_CHECKING:
-    from src.employee.models import Employee
     from src.seniority_level.models import RoleSeniorityLevel
     from src.skill_validation_request.models import SkillValidationRequest
 
 
-class Skill(SQLModel, table=True):
+class Skill(BaseModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
     description: Optional[str]

@@ -7,7 +7,7 @@ def employee_seniority_levels_query(employee_id: int):
             GROUP BY rsl.id
         ),
         approved_skills AS (
-            SELECT rsl.id AS role_seniority_level_id, COUNT(*) AS approved_skill_count, MAX(svr.approved_date) AS attainment_date
+            SELECT rsl.id AS role_seniority_level_id, COUNT(*) AS approved_skill_count, MAX(svr.updated_at) AS attainment_date
             FROM employee e
             JOIN role_seniority_level rsl ON e.role_id = rsl.role_id
             JOIN seniority_level_skill sls ON rsl.id = sls.role_seniority_level_id

@@ -9,7 +9,6 @@ from src.skill.mappers import (
     to_skill_employees,
     to_skill_seniority_levels,
     to_skill_requests,
-    to_skill_all,
 )
 from src.skill.models import Skill
 from src.skill.schemas import (
@@ -20,6 +19,7 @@ from src.skill.schemas import (
     SkillRequests,
     SkillAll,
 )
+from src.skill_validation_request.models import SkillValidationRequest
 
 
 def get_all() -> list[Skill]:
@@ -62,6 +62,7 @@ def update(skill_id: int, skill: SkillUpdate) -> Skill:
         skill_db = session.get(Skill, skill_id)
         if not skill_db:
             raise SkillNotFound(skill_id)
+        skill_db.before_update()
         update_skill(skill_db, skill)
         session.commit()
         session.refresh(skill_db)
@@ -80,12 +81,19 @@ def delete(skill_id: int):
 
 def get_with_employees(skill_id: int) -> SkillEmployees:
     with Session(engine) as session:
-        statement = select(Skill).where(Skill.id == skill_id)
+        skill = session.get(Skill, skill_id)
+        if not skill:
+            raise SkillNotFound(skill_id)
+        statement = (
+            select(SkillValidationRequest)
+            .where(SkillValidationRequest.skill_id == skill_id)
+            .where(SkillValidationRequest.approved == True)
+        )
         result = session.exec(statement)
-        try:
-            return to_skill_employees(result.one())
-        except NoResultFound as exception:
-            raise SkillNotFound(skill_id) from exception
+        employees = [request.employee for request in result.all()]
+        skill = to_skill_employees(skill)
+        skill.employees = employees
+        return skill
 
 
 def get_with_seniority_levels(skill_id: int) -> SkillSeniorityLevels:
@@ -104,15 +112,5 @@ def get_with_requests(skill_id: int) -> SkillRequests:
         result = session.exec(statement)
         try:
             return to_skill_requests(result.one())
-        except NoResultFound as exception:
-            raise SkillNotFound(skill_id) from exception
-
-
-def get_with_all(skill_id: int) -> SkillAll:
-    with Session(engine) as session:
-        statement = select(Skill).where(Skill.id == skill_id)
-        result = session.exec(statement)
-        try:
-            return to_skill_all(result.one())
         except NoResultFound as exception:
             raise SkillNotFound(skill_id) from exception

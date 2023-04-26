@@ -1,8 +1,9 @@
 from typing import TYPE_CHECKING, List, Optional
 
-from sqlmodel import Field, Relationship, SQLModel
+from sqlmodel import Field, Relationship
+from src.models import BaseModel
 
-from src.seniority_level.models import RoleSeniorityLevel
+from src.role_seniority_level.models import RoleSeniorityLevel
 
 
 if TYPE_CHECKING:
@@ -10,7 +11,7 @@ if TYPE_CHECKING:
     from src.employee.models import Employee
 
 
-class Role(SQLModel, table=True):
+class Role(BaseModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(unique=True)
     description: Optional[str]

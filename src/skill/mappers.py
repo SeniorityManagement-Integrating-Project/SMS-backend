@@ -15,7 +15,7 @@ def update_skill(skill_db: Skill, skill: SkillUpdate) -> Skill:
 
 def to_skill_employees(skill: Skill) -> SkillEmployees:
     skill_data = skill.dict()
-    skill_data["employees"] = skill.employees
+    skill_data["employees"] = []
     return SkillEmployees(**skill_data)
 
 
@@ -30,10 +30,3 @@ def to_skill_requests(skill: Skill) -> SkillRequests:
     skill_data["requests"] = skill.requests
     return SkillRequests(**skill_data)
 
-
-def to_skill_all(skill: Skill) -> SkillAll:
-    skill_data = skill.dict()
-    skill_data["employees"] = skill.employees
-    skill_data["seniority_levels"] = skill.seniority_levels
-    skill_data["requests"] = skill.requests
-    return SkillAll(**skill_data)
