@@ -54,8 +54,3 @@ def get_with_seniority_levels(skill_id: int) -> SkillSeniorityLevels:
 @router.get("/requests/{skill_id}")
 def get_with_requests(skill_id: int) -> SkillRequests:
     return skill_service.get_with_requests(skill_id)
-
-
-@router.get("/all/{skill_id}")
-def get_with_all(skill_id: int) -> SkillAll:
-    return skill_service.get_with_all(skill_id)

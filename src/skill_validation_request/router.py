@@ -5,13 +5,11 @@ from fastapi import APIRouter, status
 import src.skill_validation_request.service as request_service
 from src.skill_validation_request.models import (
     SkillValidationRequest,
-    SkillValidationRequestComment,
 )
 from src.skill_validation_request.schemas import (
     RequestCreate,
     RequestUpdate,
-    RequestComment,
-    RequestCommentCreate,
+    SkillValidationRequestComments,
 )
 
 router = APIRouter()
@@ -50,15 +48,5 @@ def update(skill_validation_request_id: int, request: RequestUpdate):
     "/comments/{skill_validation_request_id}",
     description="Broke if any of the attributes of the request is null",
 )
-def get_with_comments(skill_validation_request_id: int) -> RequestComment:
+def get_with_comments(skill_validation_request_id: int) -> SkillValidationRequestComments:
     return request_service.get_with_comments(skill_validation_request_id)
-
-
-@router.post(
-    "/comments/{skill_validation_request_id}",
-    description="Not working yet. Cannot create a comment after query a request. Maybe because the session.",
-)
-def create_comment(
-    skill_validation_request_id: int, request_comment: RequestCommentCreate
-) -> SkillValidationRequestComment:
-    return request_service.create_comment(skill_validation_request_id, request_comment)

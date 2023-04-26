@@ -14,7 +14,7 @@ from src.employee.schemas import (
 
 def to_employee_skills(employee: Employee) -> EmployeeSkills:
     role_data = employee.dict()
-    role_data["skills"] = employee.skills
+    role_data["skills"] = []
     return EmployeeSkills(**role_data)
 
 
@@ -37,19 +37,21 @@ def to_employee_account(employee: Employee) -> EmployeeAccount:
 
 
 def tuple_to_employee_seniority_level(employee_seniority_level: tuple):
-    return EmployeeSeniorityLevel(
-        id=employee_seniority_level[0],
-        name=employee_seniority_level[1],
-        description=employee_seniority_level[2],
-        role_id=employee_seniority_level[3],
-        role_name=employee_seniority_level[4],
-        attainment_date=employee_seniority_level[5],
-    )
+    attributes = [
+        "role_seniority_level_id",
+        "level",
+        "seniority_level_name",
+        "role_name",
+        "description",
+        "attainment_date",
+    ]
+    employee_seniority_level_dict = dict(zip(attributes, employee_seniority_level))
+    return EmployeeSeniorityLevel(**employee_seniority_level_dict)
 
 
 def to_employee_seniority_levels(employee: Employee) -> EmployeeSeniorityLevels:
     role_data = employee.dict()
-    role_data["seniority_levels"] = None
+    role_data["seniority_levels"] = []
     return EmployeeSeniorityLevels(**role_data)
 
 

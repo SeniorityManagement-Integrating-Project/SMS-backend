@@ -4,12 +4,8 @@ from sqlalchemy.exc import IntegrityError
 from src.employee.queries import employee_seniority_levels_query
 
 from src.db import engine
-from src.employee.exceptions import (
-    EmployeeNotFound,
-    EmployeeSkillAlreadyExists,
-    EmployeeSkillNotFound,
-)
-from src.employee.models import Employee, EmployeeSkill
+from src.employee.exceptions import EmployeeNotFound
+from src.employee.models import Employee
 from src.employee.schemas import (
     EmployeeAccount,
     EmployeeCreate,
@@ -33,9 +29,6 @@ from src.employee.mappers import (
     update_employee,
 )
 from src.role.models import Role
-
-from src.skill.exceptions import SkillNotFound
-from src.skill.models import Skill
 
 
 def get_all() -> List[Employee]:
@@ -99,6 +92,7 @@ def update(employee_id: int, employee: EmployeeUpdate) -> Employee:
         employee_db = session.get(Employee, employee_id)
         if not employee_db:
             raise EmployeeNotFound(employee_id)
+        employee_db.before_update()
         update_employee(employee_db, employee)
         try:
             session.commit()
@@ -140,6 +134,7 @@ def get_with_seniority_levels(employee_id: int) -> EmployeeSeniorityLevels:
             raise EmployeeNotFound(employee_id)
         employee = to_employee_seniority_levels(employee)
         seniority_levels = get_employee_seniority_levels(employee_id)
+        print(seniority_levels)
         employee.seniority_levels = [
             tuple_to_employee_seniority_level(seniority_level)
             for seniority_level in seniority_levels
@@ -188,36 +183,8 @@ def get_with_skills(employee_id: int) -> EmployeeSkills:
         employee = session.get(Employee, employee_id)
         if not employee:
             raise EmployeeNotFound(employee_id)
-        return to_employee_skills(employee)
-
-
-def add_skill(employee_id: int, skill_id: int):
-    with Session(engine) as session:
-        employee = session.get(Employee, employee_id)
-        skill = session.get(Skill, skill_id)
-        if not employee:
-            raise EmployeeNotFound(employee_id)
-        if not skill:
-            raise SkillNotFound(skill_id)
-        try:
-            session.add(EmployeeSkill(employee_id=employee_id, skill_id=skill_id))
-            session.commit()
-        except IntegrityError as exc:
-            raise EmployeeSkillAlreadyExists(employee_id, skill_id) from exc
-        return get_with_skills(employee_id)
-
-
-def remove_skill(employee_id: int, skill_id: int):
-    with Session(engine) as session:
-        employee = session.get(Employee, employee_id)
-        skill = session.get(Skill, skill_id)
-        employee_skill = session.get(EmployeeSkill, (employee_id, skill_id))
-        if not employee:
-            raise EmployeeNotFound(employee_id)
-        if not skill:
-            raise SkillNotFound(skill_id)
-        if not employee_skill:
-            raise EmployeeSkillNotFound(employee_id, skill_id)
-        session.delete(employee_skill)
-        session.commit()
-        return get_with_skills(employee_id)
+        employee_with_skills = to_employee_skills(employee)
+        approved_requests = filter(lambda request: request.approved == True, employee.requests)
+        skills = [request.skill for request in approved_requests]
+        employee_with_skills.skills = skills
+        return employee_with_skills
