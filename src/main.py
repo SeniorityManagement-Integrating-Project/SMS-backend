@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from src.employee import router as employee
 from src.role import router as role
@@ -18,8 +19,15 @@ from src.interaction.exceptions import add_interaction_exception_handlers
 from src.skill.exceptions import add_skill_exception_handlers
 from src.skill_validation_request.exceptions import add_request_exception_handlers
 
-
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+    allow_credentials=False,
+)
 
 
 @app.get("/")
