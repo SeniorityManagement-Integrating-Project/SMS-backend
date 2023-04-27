@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-    types: ["closed"]
+    types: ["merged"]
 
 jobs:
 
@@ -51,5 +51,5 @@ jobs:
           sudo docker system prune -fa --volumes
           #Pull and run the latest image
           sudo docker pull krizz23/sms-backend:actions
-          sudo docker run --rm -d -p 9000:8000 --name sms-backend krizz23/sms-backend:actions
+          sudo docker run -d -p 9000:8000 --name sms-backend krizz23/sms-backend:actions
         '
