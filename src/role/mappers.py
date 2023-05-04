@@ -23,7 +23,7 @@ def to_role_employees_list(roles: list[Role]) -> list[RoleEmployees]:
 
 def to_role_seniority_levels(role: Role) -> RoleSeniorityLevels:
     role_data = role.dict()
-    role_data["seniority_levels"] = role.seniority_levels
+    role_data["seniority_levels"] = role.role_seniority_levels
     return RoleSeniorityLevels(**role_data)
 
 def to_role_seniority_levels_list(roles: list[Role]) -> list[RoleSeniorityLevels]:

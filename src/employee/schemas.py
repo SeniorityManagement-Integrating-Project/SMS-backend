@@ -55,10 +55,20 @@ class EmployeeSeniorityLevel(SQLModel):
     attainment_date: datetime
 
 
-
 class EmployeeCurrentSeniorityLevel(EmployeeBase):
     seniority_level: EmployeeSeniorityLevel | None
 
 
 class EmployeeSeniorityLevels(EmployeeBase):
     seniority_levels: List[EmployeeSeniorityLevel] | None
+
+
+class EmployeeSkill(Skill):
+    is_attained: bool 
+
+
+class EmployeeGrowthLevel(SQLModel):
+    level_name: str
+    description: Optional[str]
+    level: int
+    skills: List[EmployeeSkill]

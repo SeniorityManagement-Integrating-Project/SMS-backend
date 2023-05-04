@@ -4,7 +4,7 @@ from fastapi import APIRouter, status, Query
 
 import src.employee.service as employee_service
 from src.employee.models import Employee
-from src.employee.schemas import EmployeeAccount, EmployeeCreate, EmployeeUpdate
+from src.employee.schemas import EmployeeAccount, EmployeeCreate, EmployeeGrowthLevel, EmployeeUpdate
 
 router = APIRouter()
 
@@ -79,3 +79,8 @@ def get_with_requests(employee_id: int):
 )
 def get_account(employee_id: int):
     return employee_service.get_with_account(employee_id)
+
+
+@router.get("/growth/{employee_id}")
+def get_growth(employee_id: int) -> List[EmployeeGrowthLevel]:
+    return employee_service.get_growth(employee_id)
