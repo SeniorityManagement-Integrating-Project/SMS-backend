@@ -6,6 +6,7 @@ import src.skill.service as skill_service
 from src.skill.models import Skill
 from src.skill.schemas import (
     SkillCreate,
+    SkillEmployeeRequests,
     SkillUpdate,
     SkillEmployees,
     SkillSeniorityLevels,
@@ -54,3 +55,7 @@ def get_with_seniority_levels(skill_id: int) -> SkillSeniorityLevels:
 @router.get("/requests/{skill_id}")
 def get_with_requests(skill_id: int) -> SkillRequests:
     return skill_service.get_with_requests(skill_id)
+
+@router.get("/employee_request/{skill_id}/{employee_id}")
+def get_with_employee_requests(skill_id: int, employee_id:int) -> SkillEmployeeRequests:
+    return skill_service.get_with_employee_requests(skill_id, employee_id)
