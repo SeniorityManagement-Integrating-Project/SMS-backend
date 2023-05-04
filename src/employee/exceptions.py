@@ -27,6 +27,20 @@ class EmployeeSkillAlreadyExists(Exception):
         super().__init__(self.message)
 
 
+class EmployeeHasNoRole(Exception):
+    def __init__(self, employee_id: int):
+        self.employee_id = employee_id
+        self.message = f"Employee with id {employee_id} has no role"
+        super().__init__(self.message)
+
+
+async def employee_has_no_role_exception_handler(_: Request, exc: EmployeeHasNoRole):
+    return JSONResponse(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        content={"message": exc.message},
+    )
+
+
 async def employee_not_found_exception_handler(_: Request, exc: EmployeeNotFound):
     return JSONResponse(
         status_code=status.HTTP_404_NOT_FOUND,
@@ -56,3 +70,4 @@ def add_employee_exception_handlers(app: FastAPI):
     app.add_exception_handler(
         EmployeeSkillAlreadyExists, employee_skill_already_exists_exception_handler
     )
+    app.add_exception_handler(EmployeeHasNoRole, employee_has_no_role_exception_handler)

@@ -4,7 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from src.employee.queries import employee_seniority_levels_query
 
 from src.db import engine
-from src.employee.exceptions import EmployeeNotFound
+from src.employee.exceptions import EmployeeHasNoRole, EmployeeNotFound
 from src.employee.models import Employee
 from src.employee.schemas import (
     EmployeeAccount,
@@ -15,6 +15,7 @@ from src.employee.schemas import (
     EmployeeSeniorityLevels,
     EmployeeSkills,
     EmployeeUpdate,
+    EmployeeGrowthLevel,
 )
 from src.role.exceptions import RoleNotFound
 from src.employee.mappers import (
@@ -134,7 +135,6 @@ def get_with_seniority_levels(employee_id: int) -> EmployeeSeniorityLevels:
             raise EmployeeNotFound(employee_id)
         employee = to_employee_seniority_levels(employee)
         seniority_levels = get_employee_seniority_levels(employee_id)
-        print(seniority_levels)
         employee.seniority_levels = [
             tuple_to_employee_seniority_level(seniority_level)
             for seniority_level in seniority_levels
@@ -184,7 +184,42 @@ def get_with_skills(employee_id: int) -> EmployeeSkills:
         if not employee:
             raise EmployeeNotFound(employee_id)
         employee_with_skills = to_employee_skills(employee)
-        approved_requests = filter(lambda request: request.approved == True, employee.requests)
+        approved_requests = filter(lambda request: request.approved is True, employee.requests)
         skills = [request.skill for request in approved_requests]
         employee_with_skills.skills = skills
         return employee_with_skills
+
+
+def get_growth(employee_id):
+    with Session(engine) as session:
+        employee = session.get(Employee, employee_id)
+        if not employee:
+            raise EmployeeNotFound(employee_id)
+        employee_role = employee.role
+        if employee_role is None:
+            raise EmployeeHasNoRole(employee_id)
+        employee_requests = employee.requests
+        employee_approved_requests = filter(
+            lambda request: request.approved is True, employee_requests
+        )
+        approved_skills_id = [
+            request.skill_id for request in employee_approved_requests if request.approved is True
+        ]
+
+        role_seniority_levels = employee_role.role_seniority_levels
+        growth = []
+        for i in role_seniority_levels:
+            data = {}
+            data["level_name"] = f"{i.seniority_level.name} {employee_role.name}"
+            data['description'] = i.description
+            data["level"] = i.seniority_level.level
+            data["skills"] = []
+
+            for skill in i.skills:
+                skill_data = skill.dict()
+                skill_data["is_attained"] = False
+                if skill.id in approved_skills_id:
+                    skill_data["is_attained"] = True
+                data["skills"].append(skill_data)
+            growth.append(data)
+        return sorted(growth, key=lambda x: x["level"])
