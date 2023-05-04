@@ -4,6 +4,7 @@ from sqlmodel import SQLModel
 
 from src.employee.models import Employee
 from src.role_seniority_level.models import RoleSeniorityLevel
+from src.skill.models import Skill
 from src.skill_validation_request.models import SkillValidationRequest
 
 
@@ -45,3 +46,10 @@ class SkillAll(SQLModel):
     employees: List[Employee] = []
     seniority_levels: List[RoleSeniorityLevel] = []
     requests: List[SkillValidationRequest] = []
+
+
+class SkillEmployeeRequests(SQLModel):
+    id: int
+    name: str
+    description: str
+    employee_requests: List[SkillValidationRequest] = []

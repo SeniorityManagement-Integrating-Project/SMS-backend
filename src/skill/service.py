@@ -2,9 +2,12 @@ from sqlalchemy.exc import NoResultFound
 from sqlmodel import Session, select
 
 from src.db import engine
+from src.employee.models import Employee
 from src.skill.exceptions import SkillNotFound, SkillAlreadyExists
+from src.employee.exceptions import EmployeeNotFound
 from src.skill.mappers import (
     to_skill,
+    to_skill_employee_requests,
     update_skill,
     to_skill_employees,
     to_skill_seniority_levels,
@@ -17,7 +20,6 @@ from src.skill.schemas import (
     SkillEmployees,
     SkillSeniorityLevels,
     SkillRequests,
-    SkillAll,
 )
 from src.skill_validation_request.models import SkillValidationRequest
 
@@ -114,3 +116,23 @@ def get_with_requests(skill_id: int) -> SkillRequests:
             return to_skill_requests(result.one())
         except NoResultFound as exception:
             raise SkillNotFound(skill_id) from exception
+
+
+def get_with_employee_requests(skill_id: int, employee_id: int):
+    with Session(engine) as session:
+        skill = session.get(Skill, skill_id)
+        if not skill:
+            raise SkillNotFound(skill_id)
+        employee = session.get(Employee, employee_id)
+        if not employee:
+            raise EmployeeNotFound(employee_id)
+        statement = (
+            select(SkillValidationRequest)
+            .where(SkillValidationRequest.skill_id == skill_id)
+            .where(SkillValidationRequest.employee_id == employee_id)
+        )
+        result = session.exec(statement)
+        employee_requests = result.all()
+        skill_employee_requests = to_skill_employee_requests(skill)
+        skill_employee_requests.employee_requests = employee_requests
+        return skill_employee_requests

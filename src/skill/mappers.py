@@ -1,5 +1,13 @@
 from src.skill.models import Skill
-from src.skill.schemas import SkillCreate, SkillUpdate, SkillEmployees, SkillSeniorityLevels, SkillRequests, SkillAll
+from src.skill.schemas import (
+    SkillCreate,
+    SkillEmployeeRequests,
+    SkillUpdate,
+    SkillEmployees,
+    SkillSeniorityLevels,
+    SkillRequests,
+    SkillAll,
+)
 
 
 def to_skill(skill: SkillCreate) -> Skill:
@@ -30,3 +38,8 @@ def to_skill_requests(skill: Skill) -> SkillRequests:
     skill_data["requests"] = skill.requests
     return SkillRequests(**skill_data)
 
+
+def to_skill_employee_requests(skill: Skill) -> SkillEmployeeRequests:
+    skill_data = skill.dict()
+    skill_data["employee_requests"] = []
+    return SkillEmployeeRequests(**skill_data)
