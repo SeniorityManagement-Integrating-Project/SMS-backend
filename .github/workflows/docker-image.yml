@@ -1,6 +1,7 @@
 name: Docker Image CI
 
 on:
+  workflow_dispatch: # Manually run the workflow
   push:
     branches: [ "main" ]
   pull_request:
