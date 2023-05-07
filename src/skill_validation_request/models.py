@@ -13,9 +13,9 @@ if TYPE_CHECKING:
 class SkillValidationRequest(BaseModel, table=True):
     __tablename__ = "skill_validation_request"  # type: ignore
     id: Optional[int] = Field(default=None, primary_key=True)
-    employee_id: Optional[int] = Field(foreign_key="employee.id")
+    employee_id: int = Field(foreign_key="employee.id")
     employee: "Employee" = Relationship(back_populates="requests")
-    skill_id: Optional[int] = Field(foreign_key="skill.id")
+    skill_id: int = Field(foreign_key="skill.id")
     skill: "Skill" = Relationship(back_populates="requests")
     request_date: datetime = Field(default_factory=datetime.now)
     support_file: Optional[str]

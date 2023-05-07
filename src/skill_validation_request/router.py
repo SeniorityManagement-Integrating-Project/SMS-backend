@@ -7,6 +7,7 @@ from src.skill_validation_request.models import (
     SkillValidationRequest,
 )
 from src.skill_validation_request.schemas import (
+    EmployeeRequest,
     RequestCreate,
     RequestUpdate,
     SkillValidationRequestComments,
@@ -26,7 +27,7 @@ def get(skill_validation_request_id: int) -> SkillValidationRequest:
 
 
 @router.get("/employee/{employee_id}")
-def get_by_employee(employee_id: int) -> List[SkillValidationRequest]:
+def get_by_employee(employee_id: int) -> List[EmployeeRequest]:
     return request_service.get_by_employee(employee_id)
 
 

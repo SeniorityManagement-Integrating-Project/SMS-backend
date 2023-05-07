@@ -1,10 +1,10 @@
 from src.skill_validation_request.models import SkillValidationRequest
 from src.skill_validation_request.schemas import (
+    EmployeeRequest,
     RequestCreate,
     RequestUpdate,
     SkillValidationRequestComments,
 )
-from src.skill_request_comment.models import SkillValidationRequestComment
 
 
 def to_skill_validation_request(
@@ -36,5 +36,13 @@ def to_skill_validation_request_comments(
 ) -> SkillValidationRequestComments:
     skill_request_data = skill_request.dict()
     skill_request_data["comments"] = skill_request.comments
-    print('----------------->',skill_request_data)
     return SkillValidationRequestComments(**skill_request_data)
+
+
+def to_employee_request(
+    skill_request: SkillValidationRequest,
+) -> EmployeeRequest:
+    skill_request_data = skill_request.dict()
+    skill_request_data["comments"] = skill_request.comments
+    skill_request_data["skill"] = skill_request.skill
+    return EmployeeRequest(**skill_request_data)

@@ -1,5 +1,6 @@
 from sqlalchemy.exc import NoResultFound
 from sqlmodel import Session, select
+from sqlalchemy import desc
 
 from src.db import engine
 from src.employee.exceptions import EmployeeNotFound
@@ -16,11 +17,13 @@ from src.skill_validation_request.models import (
     SkillValidationRequest,
 )
 from src.skill_validation_request.schemas import (
+    EmployeeRequest,
     RequestCreate,
     RequestUpdate,
     SkillValidationRequestComments,
 )
 from src.skill_validation_request.mappers import (
+    to_employee_request,
     to_skill_validation_request,
     update_skill_validation_request,
     to_skill_validation_request_comments,
@@ -69,15 +72,19 @@ def get(skill_validation_request_id: int) -> SkillValidationRequest:
             raise RequestNotFound(skill_validation_request_id) from exception
 
 
-def get_by_employee(employee_id: int) -> list[SkillValidationRequest]:
+def get_by_employee(employee_id: int) -> list[EmployeeRequest]:
     with Session(engine) as session:
-        statement = select(SkillValidationRequest).where(
-            SkillValidationRequest.employee_id == employee_id
+        statement = (
+            select(SkillValidationRequest)
+            .where(SkillValidationRequest.employee_id == employee_id)
+            .order_by(
+                SkillValidationRequest.request_date, desc(SkillValidationRequest.request_date)
+            )
         )
         result = session.exec(statement).all()
         if not result:
             raise EmployeeWithoutRequests(employee_id)
-        return result
+        return [to_employee_request(request) for request in result]
 
 
 def update(
