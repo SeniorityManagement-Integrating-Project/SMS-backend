@@ -1,15 +1,18 @@
-from sqlalchemy.exc import NoResultFound
 from sqlmodel import Session, select
 
 from src.db import engine
-from src.role_seniority_level.exceptions import SeniorityLevelSkillNotFound
-from src.role_seniority_level.models import RoleSeniorityLevel, SeniorityLevelSkill
+from src.seniority_level.schemas import SeniorityLevelByRole
+from src.role.exceptions import RoleNotFound
+from src.role.models import Role
+from src.role_seniority_level.models import RoleSeniorityLevel
 from src.seniority_level.exceptions import SeniorityLevelAlreadyExist, SeniorityLevelNotFound
 from src.seniority_level.models import SeniorityLevel
 from src.seniority_level.schemas import SeniorityLevelCreate, SeniorityLevelUpdate
-from src.seniority_level.mappers import to_seniority_level, update_seniority_level
-from src.skill.exceptions import SkillNotFound
-from src.skill.models import Skill
+from src.seniority_level.mappers import (
+    to_seniority_level_role_by,
+    to_seniority_level,
+    update_seniority_level,
+)
 
 
 def get_all() -> list[SeniorityLevel]:
@@ -74,3 +77,20 @@ def delete(seniority_level_id: int) -> SeniorityLevel:
         session.delete(seniority_level)
         session.commit()
         return seniority_level
+
+
+def get_by_role(role_id: int) -> list[SeniorityLevelByRole]:
+    with Session(engine) as session:
+        role = session.get(Role, role_id)
+        if not role:
+            raise RoleNotFound(role_id)
+        statement = select(RoleSeniorityLevel).where(RoleSeniorityLevel.role_id == role_id)
+        result = session.exec(statement).all()
+        seniority_levels = []
+        for role_seniority_level in result:
+            role_by_seniority_level = to_seniority_level_role_by(
+                role_seniority_level.seniority_level
+            )
+            role_by_seniority_level.description = role_seniority_level.description
+            seniority_levels.append(role_by_seniority_level)
+        return seniority_levels
