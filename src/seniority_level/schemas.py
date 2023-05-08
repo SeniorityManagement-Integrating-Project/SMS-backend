@@ -2,6 +2,8 @@ from typing import Optional
 
 from sqlmodel import SQLModel
 
+from src.seniority_level.models import SeniorityLevel
+
 
 class SeniorityLevelCreate(SQLModel):
     name: str
@@ -10,3 +12,7 @@ class SeniorityLevelCreate(SQLModel):
 
 class SeniorityLevelUpdate(SQLModel):
     name: str
+
+
+class SeniorityLevelByRole(SeniorityLevel):
+    description: Optional[str]
