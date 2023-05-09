@@ -71,7 +71,7 @@ async def protected_route(user: Auth0User = Depends(auth.get_user), token: str =
     userinfo_response = requests.get(userinfo_url, headers=headers)
 
     # Extract the user's email from the response
-    email = userinfo_response.json().get('email')
+    email = userinfo_response.json()
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", email)
     return {"message": f"Hola, {email}!"}
     # return {"message": f"Hola, {user.email}!"}
