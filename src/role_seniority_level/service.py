@@ -1,5 +1,5 @@
 from sqlalchemy.exc import NoResultFound
-from sqlmodel import Session, select
+from sqlmodel import Session, select, subquery
 
 from src.db import engine
 from src.role_seniority_level.mappers import (
@@ -20,6 +20,7 @@ from src.role_seniority_level.exceptions import (
 )
 from src.role_seniority_level.models import RoleSeniorityLevel, SeniorityLevelSkill
 from src.seniority_level.exceptions import SeniorityLevelNotFound
+from src.seniority_level.models import SeniorityLevel
 from src.skill.exceptions import SkillNotFound
 from src.skill.models import Skill
 
@@ -107,14 +108,24 @@ def add_skill(role_seniority_level_id: int, skill_id: int) -> SeniorityLevelSkil
             raise RoleSeniorityLevelNotFound(role_seniority_level_id)
         if not skill:
             raise SkillNotFound(skill_id)
+        # statement = (
+        #     select(SeniorityLevelSkill)
+        #     .where(SeniorityLevelSkill.role_seniority_level_id == role_seniority_level_id)
+        #     .where(SeniorityLevelSkill.skill_id == skill_id)
+        # )
         statement = (
             select(SeniorityLevelSkill)
-            .where(SeniorityLevelSkill.role_seniority_level_id == role_seniority_level_id)
+            .join(
+                RoleSeniorityLevel,
+                SeniorityLevelSkill.role_seniority_level_id == RoleSeniorityLevel.id,
+            )
+            .where(RoleSeniorityLevel.role_id == role_seniority_level.role_id)
             .where(SeniorityLevelSkill.skill_id == skill_id)
         )
-        result = session.exec(statement)
-        if result.one_or_none():
-            raise SeniorityLevelSkillAlreadyExists(role_seniority_level_id, skill_id)
+        result = session.exec(statement).all()
+        print(result)
+        if len(result) > 0:
+            raise SeniorityLevelSkillAlreadyExists(role_seniority_level.role_id, skill_id)
         sl_skill = SeniorityLevelSkill(
             role_seniority_level_id=role_seniority_level_id, skill_id=skill_id
         )

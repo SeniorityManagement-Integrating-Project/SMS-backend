@@ -27,7 +27,7 @@ class SeniorityLevelSkillAlreadyExists(Exception):
         self.seniority_level_id = seniority_level_id
         self.skill_id = skill_id
         if seniority_level_id and skill_id:
-            self.message = f"Seniority level with id {seniority_level_id} already has the skill with id {skill_id}"
+            self.message = f"The Role associated with Seniority level with id {seniority_level_id} already has the skill with id {skill_id}"
         else:
             self.message = "Seniority level already has the skill"
         super().__init__(self.message)
