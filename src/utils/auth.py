@@ -4,7 +4,7 @@ from fastapi.security import OAuth2AuthorizationCodeBearer
 from dotenv import load_dotenv
 import os
 
-# Cargar las variables de entorno desde el archivo .env
+# Load the environment variables from the file .env
 load_dotenv()
 
 oauth2_scheme_admin = OAuth2AuthorizationCodeBearer(

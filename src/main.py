@@ -36,7 +36,7 @@ app.add_middleware(
     allow_credentials=False,
 )
 
-# Cargar las variables de entorno desde el archivo .env
+# Load the environment variables from the file .env
 load_dotenv()
 
 oauth2_scheme = OAuth2AuthorizationCodeBearer(
@@ -61,14 +61,14 @@ oauth2_scheme_admin = OAuth2AuthorizationCodeBearer(
     }
 )
 
-# Configurar Auth0 utilizando las variables de entorno
+# Set up Auth0 using environment variables
 auth = Auth0(
     domain=os.environ.get("AUTH0_DOMAIN"),
     api_audience=os.environ.get("AUTH0_API_AUDIENCE"),
     # scopes={"read:users": "Read Users"},
 )
 
-# Protección de rutas con Auth0
+# Protect a route with auth0
 
 
 async def get_token_bearer_admin(token: str = Depends(oauth2_scheme_admin)):
@@ -77,7 +77,7 @@ async def get_token_bearer_admin(token: str = Depends(oauth2_scheme_admin)):
 
 @app.get("/protected")
 async def protected_route(user: Auth0User = Depends(auth.get_user), token: str = Depends(oauth2_scheme)):
-    # Aquí puedes acceder a los datos del usuario autenticado
+    # Here you can do whatever you want with the user info
     print("*****************************", user)
     # Make a request to the Auth0 userinfo endpoint to retrieve the user's profile
     userinfo_url = os.environ.get("ISSUER")+'/userinfo'
