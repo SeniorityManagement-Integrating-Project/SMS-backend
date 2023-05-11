@@ -2,7 +2,6 @@ anyio==3.6.2
 astroid==2.15.2
 Authlib==1.2.0
 autopep8==2.0.2
-certifi @ file:///C:/b/abs_85o_6fm0se/croot/certifi_1671487778835/work/certifi
 cffi==1.15.1
 charset-normalizer==3.1.0
 click==8.1.3
