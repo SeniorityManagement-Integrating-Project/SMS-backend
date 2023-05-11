@@ -16,11 +16,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Make envfile
-      run: echo "DATABASE_URL=${{ secrets.POSTGRES_RDS_URL }}" > .env
-           echo "AUTH0_DOMAIN={{ secrets.AUTH0_DOMAIN }}" >> .env
-           echo "AUTH0_API_AUDIENCE={{ secrets.AUTH0_API_AUDIENCE }}" >> .env
-           echo "ALGORITHMS={{ secrets.AUTH0_ALGORITHMS }}" >> .env
-           echo "ISSUER={{ secrets.AUTH0_ISSUER }}" >> .env
+      run: echo -e "DATABASE_URL=${{ secrets.POSTGRES_RDS_URL }}\n" > .env
+           echo -e "AUTH0_DOMAIN=${{ secrets.AUTH0_DOMAIN }}\n" >> .env
+           echo -e "AUTH0_API_AUDIENCE=${{ secrets.AUTH0_API_AUDIENCE }}\n" >> .env
+           echo -e "ALGORITHMS=${{ secrets.AUTH0_ALGORITHMS }}\n" >> .env
+           echo -e "ISSUER=${{ secrets.AUTH0_ISSUER }}\n" >> .env
 
     - name: Build the Docker image
       run: docker build -t krizz23/sms-backend:actions .
