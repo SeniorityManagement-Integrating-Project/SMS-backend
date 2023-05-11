@@ -79,18 +79,3 @@ def delete(seniority_level_id: int) -> SeniorityLevel:
         return seniority_level
 
 
-def get_by_role(role_id: int) -> list[SeniorityLevelByRole]:
-    with Session(engine) as session:
-        role = session.get(Role, role_id)
-        if not role:
-            raise RoleNotFound(role_id)
-        statement = select(RoleSeniorityLevel).where(RoleSeniorityLevel.role_id == role_id)
-        result = session.exec(statement).all()
-        seniority_levels = []
-        for role_seniority_level in result:
-            role_by_seniority_level = to_seniority_level_role_by(
-                role_seniority_level.seniority_level
-            )
-            role_by_seniority_level.description = role_seniority_level.description
-            seniority_levels.append(role_by_seniority_level)
-        return seniority_levels

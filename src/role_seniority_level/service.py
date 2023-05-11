@@ -2,8 +2,11 @@ from sqlalchemy.exc import NoResultFound
 from sqlmodel import Session, select, subquery
 
 from src.db import engine
+from src.role.exceptions import RoleNotFound
+from src.role.models import Role
 from src.role_seniority_level.mappers import (
     to_role_seniority_level,
+    to_role_seniority_level_by_id,
     to_role_seniority_level_skills,
     update_role_seniority_level,
 )
@@ -155,3 +158,14 @@ def remove_skill(role_seniority_level_id: int, skill_id: int):
         session.commit()
         session.refresh(seniority_level_skill)
         return seniority_level_skill
+
+
+def get_by_role(role_id: int):
+    with Session(engine) as session:
+        role =  session.get(Role, role_id)
+        if not role:
+            raise RoleNotFound(role_id)
+        statement = select(RoleSeniorityLevel).where(RoleSeniorityLevel.role_id == role_id)
+        result = session.exec(statement).all()
+        role_sl_by_role = [to_role_seniority_level_by_id(role_sl) for role_sl in result]
+        return role_sl_by_role

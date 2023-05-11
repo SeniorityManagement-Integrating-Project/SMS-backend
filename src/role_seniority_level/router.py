@@ -1,5 +1,6 @@
+from typing import List
 from fastapi import APIRouter
-from src.role_seniority_level.schemas import RoleSeniorityLevelCreate, RoleSeniorityLevelUpdate
+from src.role_seniority_level.schemas import RoleSeniorityLevelByRole, RoleSeniorityLevelCreate, RoleSeniorityLevelUpdate
 import src.role_seniority_level.service as role_seniority_level_service
 from src.role_seniority_level.models import RoleSeniorityLevel, SeniorityLevelSkill
 
@@ -46,3 +47,8 @@ def add_skill(role_seniority_level_id: int, skill_id: int) -> SeniorityLevelSkil
 @router.delete("/{role_seniority_level_id}/{skill_id}")
 def remove_skill(role_seniority_level_id: int, skill_id: int) -> SeniorityLevelSkill:
     return role_seniority_level_service.remove_skill(role_seniority_level_id, skill_id)
+
+
+@router.get("/role/{role_id}")
+def get_by_role(role_id: int) -> list[RoleSeniorityLevelByRole]:
+    return role_seniority_level_service.get_by_role(role_id)

@@ -1,5 +1,7 @@
 from typing import List, Optional
 from sqlmodel import SQLModel
+from src.role.models import Role
+from src.seniority_level.models import SeniorityLevel
 
 from src.skill.models import Skill
 
@@ -22,3 +24,11 @@ class RoleSeniorityLevelSkills(SQLModel):
     role_id: int
     seniority_level_id: int
     skills: List["Skill"]
+
+
+class RoleSeniorityLevelByRole(SQLModel):
+    id: int
+    description: Optional[str]
+    skills: List[Skill]
+    role: Role
+    seniority_level: SeniorityLevel

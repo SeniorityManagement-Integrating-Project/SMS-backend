@@ -36,7 +36,3 @@ def update(seniority_level_id: int, seniority_level: SeniorityLevelUpdate):
 def delete(seniority_level_id: int) -> SeniorityLevel:
     return seniority_level_service.delete(seniority_level_id)
 
-
-@router.get("/role/{role_id}")
-def get_by_role(role_id: int) -> List[SeniorityLevelByRole]:
-    return seniority_level_service.get_by_role(role_id)

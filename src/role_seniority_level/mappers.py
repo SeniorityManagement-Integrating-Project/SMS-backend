@@ -1,5 +1,6 @@
 from src.role_seniority_level.models import RoleSeniorityLevel
 from src.role_seniority_level.schemas import (
+    RoleSeniorityLevelByRole,
     RoleSeniorityLevelCreate,
     RoleSeniorityLevelSkills,
     RoleSeniorityLevelUpdate,
@@ -25,3 +26,13 @@ def to_role_seniority_level_skills(
     role_sl_data = role_seniority_level.dict()
     role_sl_data["skills"] = role_seniority_level.skills
     return RoleSeniorityLevelSkills(**role_sl_data)
+
+
+def to_role_seniority_level_by_id(
+    role_seniority_level: RoleSeniorityLevel,
+) -> RoleSeniorityLevelByRole:
+    role_sl_data = role_seniority_level.dict()
+    role_sl_data["skills"] = role_seniority_level.skills
+    role_sl_data["role"] = role_seniority_level.role
+    role_sl_data["seniority_level"] = role_seniority_level.seniority_level
+    return RoleSeniorityLevelByRole(**role_sl_data)
