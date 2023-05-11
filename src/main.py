@@ -1,5 +1,12 @@
-from fastapi import FastAPI
+import requests
+
+from fastapi import FastAPI, Depends
+from fastapi.security import OAuth2AuthorizationCodeBearer
 from fastapi.middleware.cors import CORSMiddleware
+
+from fastapi_auth0 import Auth0, Auth0User
+from dotenv import load_dotenv
+import os
 
 from src.employee import router as employee
 from src.role import router as role
@@ -29,6 +36,60 @@ app.add_middleware(
     allow_credentials=False,
 )
 
+# Load the environment variables from the file .env
+load_dotenv()
+
+oauth2_scheme = OAuth2AuthorizationCodeBearer(
+    authorizationUrl=os.environ.get("AUTH0_DOMAIN")+"/authorize",
+    tokenUrl=os.environ.get("AUTH0_DOMAIN")+"/oauth/token",
+    scopes={
+        "openid": "OpenID Connect",
+        "profile": "User profile",
+        "email": "User email",
+        "write:admin": "An admin can write to the database (Skills, roles, seniorities level)",
+    }
+)
+
+oauth2_scheme_admin = OAuth2AuthorizationCodeBearer(
+    authorizationUrl=os.environ.get("AUTH0_DOMAIN")+"/authorize",
+    tokenUrl=os.environ.get("AUTH0_DOMAIN")+"/oauth/token",
+    scopes={
+        "openid": "OpenID Connect",
+        "profile": "User profile",
+        "email": "User email",
+        "write:admin": "An admin can write to the database (Skills, roles, seniorities level)",
+    }
+)
+
+# Set up Auth0 using environment variables
+auth = Auth0(
+    domain=os.environ.get("AUTH0_DOMAIN"),
+    api_audience=os.environ.get("AUTH0_API_AUDIENCE"),
+    # scopes={"read:users": "Read Users"},
+)
+
+# Protect a route with auth0
+
+
+async def get_token_bearer_admin(token: str = Depends(oauth2_scheme_admin)):
+    return token
+
+
+@app.get("/protected")
+async def protected_route(user: Auth0User = Depends(auth.get_user), token: str = Depends(oauth2_scheme)):
+    # Here you can do whatever you want with the user info
+    print("*****************************", user)
+    # Make a request to the Auth0 userinfo endpoint to retrieve the user's profile
+    userinfo_url = os.environ.get("ISSUER")+'/userinfo'
+    headers = {'Authorization': f'Bearer {token}'}
+    userinfo_response = requests.get(userinfo_url, headers=headers)
+
+    # Extract the user's email from the response
+    email = userinfo_response.json()
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", email)
+    return {"message": f"Hola, {email}!"}
+    # return {"message": f"Hola, {user.email}!"}
+
 
 @app.get("/")
 def read_root():
@@ -40,11 +101,13 @@ app.include_router(skill.router, prefix="/skill", tags=["Skill"])
 app.include_router(employee.router, prefix="/employee", tags=["Employee"])
 app.include_router(request.router, prefix="/request", tags=["Request"])
 app.include_router(comment.router, prefix="/comment", tags=["Request Comment"])
-app.include_router(seniority_level.router, prefix="/seniority_level", tags=["Seniority Level"])
+app.include_router(seniority_level.router,
+                   prefix="/seniority_level", tags=["Seniority Level"])
 app.include_router(
     role_seniority_level.router, prefix="/role_seniority_level", tags=["Role Seniority Level"]
 )
-app.include_router(interaction.router, prefix="/interaction", tags=["Interaction"])
+app.include_router(interaction.router,
+                   prefix="/interaction", tags=["Interaction"])
 
 
 add_role_exception_handlers(app)
