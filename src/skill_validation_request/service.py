@@ -88,7 +88,7 @@ def get_by_employee(employee_id: int) -> list[EmployeeRequest]:
 
 
 def update(
-    skill_validation_request_id: int, skill_request: RequestUpdate
+        skill_validation_request_id: int, skill_request: RequestUpdate
 ) -> SkillValidationRequest:
     with Session(engine) as session:
         # TODO: check if the validator_account exists and if it really is an admin
@@ -111,3 +111,17 @@ def get_with_comments(skill_validation_request_id: int) -> SkillValidationReques
         if not request:
             raise RequestNotFound(skill_validation_request_id)
         return to_skill_validation_request_comments(request)
+
+
+def get_all_pending() -> list[SkillValidationRequest]:
+    with Session(engine) as session:
+        statement = select(SkillValidationRequest).where(SkillValidationRequest.validated == False)
+        result = session.exec(statement)
+        return result.all()
+
+
+def get_all_approved() -> list[SkillValidationRequest]:
+    with Session(engine) as session:
+        statement = select(SkillValidationRequest).where(SkillValidationRequest.approved == True)
+        result = session.exec(statement)
+        return result.all()

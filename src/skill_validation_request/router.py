@@ -51,3 +51,13 @@ def update(skill_validation_request_id: int, request: RequestUpdate):
 )
 def get_with_comments(skill_validation_request_id: int) -> SkillValidationRequestComments:
     return request_service.get_with_comments(skill_validation_request_id)
+
+
+@router.get("/pending/", description="Get all pending requests")
+def get_all_pending() -> List[SkillValidationRequest]:
+    return request_service.get_all_pending()
+
+
+@router.get("/approved/", description="Get all approved requests")
+def get_all_approved() -> List[SkillValidationRequest]:
+    return request_service.get_all_approved()
