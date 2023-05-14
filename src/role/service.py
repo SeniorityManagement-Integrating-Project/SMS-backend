@@ -1,3 +1,4 @@
+from typing import List
 from sqlalchemy.exc import NoResultFound
 from sqlmodel import Session, select
 
@@ -6,6 +7,8 @@ from src.role.exceptions import RoleNotFound, RoleAlreadyExists
 from src.role.models import Role
 from src.role.schemas import RoleCreate, RoleSeniorityLevels, RoleUpdate, RoleEmployees
 from src.role.mappers import to_role, to_role_seniority_levels, update_role, to_role_employees
+from src.role_seniority_level.models import RoleSeniorityLevel, SeniorityLevelSkill
+from src.skill.models import Skill
 
 
 def get_all() -> list[Role]:
@@ -33,7 +36,7 @@ def get_with_employees(role_id: int) -> RoleEmployees:
             return to_role_employees(result.one())
         except NoResultFound as exception:
             raise RoleNotFound(role_id) from exception
-        
+
 
 def get_with_seniority_levels(role_id: int) -> RoleSeniorityLevels:
     with Session(engine) as session:
@@ -83,3 +86,18 @@ def delete(role_id: int) -> Role:
         session.delete(role)
         session.commit()
         return role
+
+
+def get_available_skills(role_id: int) -> List[Skill]:
+    with Session(engine) as session:
+        role = session.get(Role, role_id)
+        if not role:
+            raise RoleNotFound(role_id)
+        statement = select(Skill).except_(
+            select(Skill)
+            .join(SeniorityLevelSkill)
+            .join(RoleSeniorityLevel)
+            .where(RoleSeniorityLevel.role_id == role_id)
+        )
+        result = session.exec(statement) # type: ignore
+        return result.all()
