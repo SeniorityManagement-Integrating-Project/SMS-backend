@@ -42,3 +42,8 @@ def get_with_employees(role_id: int) -> RoleEmployees:
 @router.get("/seniority_levels/{role_id}")
 def get_with_seniority_levels(role_id: int) -> RoleSeniorityLevels:
     return role_service.get_with_seniority_levels(role_id)
+
+
+@router.get("/available_skills/{role_id}")
+def get_available_skills(role_id: int):
+    return role_service.get_available_skills(role_id)
