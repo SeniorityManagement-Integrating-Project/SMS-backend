@@ -21,10 +21,12 @@ from src.skill_validation_request.schemas import (
     RequestCreate,
     RequestUpdate,
     SkillValidationRequestComments,
+    SkillValidationRequestFull,
 )
 from src.skill_validation_request.mappers import (
     to_employee_request,
     to_skill_validation_request,
+    to_skill_validation_request_full,
     update_skill_validation_request,
     to_skill_validation_request_comments,
 )
@@ -88,7 +90,7 @@ def get_by_employee(employee_id: int) -> list[EmployeeRequest]:
 
 
 def update(
-        skill_validation_request_id: int, skill_request: RequestUpdate
+    skill_validation_request_id: int, skill_request: RequestUpdate
 ) -> SkillValidationRequest:
     with Session(engine) as session:
         # TODO: check if the validator_account exists and if it really is an admin
@@ -113,15 +115,17 @@ def get_with_comments(skill_validation_request_id: int) -> SkillValidationReques
         return to_skill_validation_request_comments(request)
 
 
-def get_all_pending() -> list[SkillValidationRequest]:
+def get_all_pending():
     with Session(engine) as session:
         statement = select(SkillValidationRequest).where(SkillValidationRequest.validated == False)
-        result = session.exec(statement)
-        return result.all()
+        result = session.exec(statement).all()
+        requests = [to_skill_validation_request_full(request) for request in result]
+        return requests
 
 
-def get_all_approved() -> list[SkillValidationRequest]:
+def get_all_approved() -> list[SkillValidationRequestFull]:
     with Session(engine) as session:
         statement = select(SkillValidationRequest).where(SkillValidationRequest.approved == True)
-        result = session.exec(statement)
-        return result.all()
+        result = session.exec(statement).all()
+        requests = [to_skill_validation_request_full(request) for request in result]
+        return requests

@@ -4,6 +4,7 @@ from src.skill_validation_request.schemas import (
     RequestCreate,
     RequestUpdate,
     SkillValidationRequestComments,
+    SkillValidationRequestFull,
 )
 
 
@@ -46,3 +47,13 @@ def to_employee_request(
     skill_request_data["comments"] = skill_request.comments
     skill_request_data["skill"] = skill_request.skill
     return EmployeeRequest(**skill_request_data)
+
+
+def to_skill_validation_request_full(
+    request: SkillValidationRequest,
+):
+    request_data = request.dict()
+    request_data["employee"] = request.employee
+    request_data["skill"] = request.skill
+    request_data["comments"] = request.comments
+    return SkillValidationRequestFull(**request_data)

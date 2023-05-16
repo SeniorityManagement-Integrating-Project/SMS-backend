@@ -11,6 +11,7 @@ from src.skill_validation_request.schemas import (
     RequestCreate,
     RequestUpdate,
     SkillValidationRequestComments,
+    SkillValidationRequestFull,
 )
 
 router = APIRouter()
@@ -54,10 +55,10 @@ def get_with_comments(skill_validation_request_id: int) -> SkillValidationReques
 
 
 @router.get("/pending/", description="Get all pending requests")
-def get_all_pending() -> List[SkillValidationRequest]:
+def get_all_pending() -> list[SkillValidationRequestFull]:
     return request_service.get_all_pending()
 
 
 @router.get("/approved/", description="Get all approved requests")
-def get_all_approved() -> List[SkillValidationRequest]:
+def get_all_approved() -> list[SkillValidationRequestFull]:
     return request_service.get_all_approved()
