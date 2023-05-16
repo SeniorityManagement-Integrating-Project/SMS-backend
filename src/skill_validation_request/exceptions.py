@@ -33,6 +33,12 @@ class RequestAlreadyValidated(Exception):
         super().__init__(self.message)
 
 
+class RequestAlreadyExists(Exception):
+    def __init__(self):
+        self.message = f"You already have a pending request for this skill"
+        super().__init__(self.message)
+
+
 async def request_not_found_handler(_: Request, exception: RequestNotFound):
     return JSONResponse(
         status_code=status.HTTP_404_NOT_FOUND,
@@ -61,8 +67,16 @@ async def request_already_validated_handler(_: Request, exception: RequestAlread
     )
 
 
+async def request_already_exists_handler(_: Request, exception: RequestAlreadyExists):
+    return JSONResponse(
+        status_code=status.HTTP_409_CONFLICT,
+        content={"message": exception.message},
+    )
+
+
 def add_request_exception_handlers(app):
     app.add_exception_handler(RequestNotFound, request_not_found_handler)
     app.add_exception_handler(RequestAlreadyApproved, request_already_approved_handler)
     app.add_exception_handler(RequestAlreadyValidated, request_already_validated_handler)
+    app.add_exception_handler(RequestAlreadyExists, request_already_exists_handler)
     app.add_exception_handler(EmployeeWithoutRequests, employee_without_requests_handler)
