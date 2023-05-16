@@ -12,6 +12,7 @@ from src.skill_validation_request.exceptions import (
     RequestAlreadyApproved,
     EmployeeWithoutRequests,
     RequestAlreadyValidated,
+    RequestAlreadyExists,
 )
 from src.skill_validation_request.models import (
     SkillValidationRequest,
@@ -56,6 +57,14 @@ def create(employee_id: int, skill_id: int, skill_request: RequestCreate) -> Ski
         result = session.exec(statement)
         if result.one_or_none():
             raise RequestAlreadyApproved(employee_id, skill_id)
+        statement2 = select(SkillValidationRequest).where(
+            SkillValidationRequest.employee_id == employee_id,
+            SkillValidationRequest.skill_id == skill_id,
+            SkillValidationRequest.validated == False,
+        )
+        result2 = session.exec(statement2)
+        if result2.one_or_none():
+            raise RequestAlreadyExists()
         session.add(request_db)
         session.commit()
         session.refresh(request_db)
