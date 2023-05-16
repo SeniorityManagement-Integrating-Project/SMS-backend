@@ -156,7 +156,6 @@ def remove_skill(role_seniority_level_id: int, skill_id: int):
             raise SeniorityLevelSkillNotFound(role_seniority_level_id, skill_id)
         session.delete(seniority_level_skill)
         session.commit()
-        session.refresh(seniority_level_skill)
         return seniority_level_skill
 
 
