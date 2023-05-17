@@ -37,7 +37,7 @@ def search_by_name(name: str = Query(min_length=3)):
 
 
 @router.post("/", response_model=Employee, status_code=status.HTTP_201_CREATED)
-def create(employee: EmployeeCreate):
+def create(employee: EmployeeCreate, token: str = Depends(get_token_bearer_employee)):
     return employee_service.create(employee)
 
 
