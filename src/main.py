@@ -50,16 +50,6 @@ oauth2_scheme = OAuth2AuthorizationCodeBearer(
     }
 )
 
-oauth2_scheme_admin = OAuth2AuthorizationCodeBearer(
-    authorizationUrl=os.environ.get("AUTH0_DOMAIN")+"/authorize",
-    tokenUrl=os.environ.get("AUTH0_DOMAIN")+"/oauth/token",
-    scopes={
-        "openid": "OpenID Connect",
-        "profile": "User profile",
-        "email": "User email",
-        "write:admin": "An admin can write to the database (Skills, roles, seniorities level)",
-    }
-)
 
 # Set up Auth0 using environment variables
 auth = Auth0(
@@ -68,11 +58,6 @@ auth = Auth0(
     # scopes={"read:users": "Read Users"},
 )
 
-# Protect a route with auth0
-
-
-async def get_token_bearer_admin(token: str = Depends(oauth2_scheme_admin)):
-    return token
 
 
 @app.get("/protected")
