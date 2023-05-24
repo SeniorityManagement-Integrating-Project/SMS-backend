@@ -1,10 +1,12 @@
 from typing import List
 
-from fastapi import APIRouter, status, Query
+from fastapi import APIRouter, status, Query, Depends
 
 import src.employee.service as employee_service
 from src.employee.models import Employee
 from src.employee.schemas import EmployeeAccount, EmployeeCreate, EmployeeGrowthLevel, EmployeeUpdate
+
+from src.utils.auth import oauth2_scheme_employee, get_token_bearer_employee
 
 router = APIRouter()
 
@@ -15,12 +17,12 @@ def get_all():
 
 
 @router.get("/{employee_id}", response_model=Employee, status_code=status.HTTP_200_OK)
-def get(employee_id: int):
+def get(employee_id: int, token: str = Depends(get_token_bearer_employee)):
     return employee_service.get(employee_id)
 
 
 @router.get("/email/{email}", response_model=Employee, status_code=status.HTTP_200_OK)
-def get_by_email(email: str):
+def get_by_email(email: str, token: str = Depends(get_token_bearer_employee)):
     return employee_service.get_by_email(email)
 
 
@@ -35,7 +37,7 @@ def search_by_name(name: str = Query(min_length=3)):
 
 
 @router.post("/", response_model=Employee, status_code=status.HTTP_201_CREATED)
-def create(employee: EmployeeCreate):
+def create(employee: EmployeeCreate, token: str = Depends(get_token_bearer_employee)):
     return employee_service.create(employee)
 
 
